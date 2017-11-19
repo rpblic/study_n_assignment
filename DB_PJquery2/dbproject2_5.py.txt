@@ -1,0 +1,596 @@
+from datetime import datetime
+import pymysql
+import numpy as np
+import pandas as pd
+import csv
+
+def requirement2(host, user, password):
+    conn = pymysql.connect(host=host, user=user, password=password)
+    try:
+        with conn.cursor() as cursor:
+            sql = 'CREATE DATABASE IF NOT EXISTS db2017_5'
+            cursor.execute(sql)
+            conn.commit()
+        conn.commit()
+    finally:
+         conn.close()
+
+def requirement3(host, user, password):
+    conn = pymysql.connect(host=host, user=user, password=password, db='db2017_5', charset='utf8')
+
+    curs = conn.cursor()
+    sql = '''CREATE table IF NOT EXISTS userInfo(
+       Id INT(11) NOT NULL,
+       Reputation INT(11) NOT NULL,
+       Displayname VARCHAR(255) NOT NULL,
+       Age INT(11),
+       CreationDate DATETIME NOT NULL,
+       LastAccessDate DATETIME NOT NULL,
+       WebsiteUrl VARCHAR(255),
+       Location VARCHAR(255),
+       Aboutme LONGTEXT,
+       PRIMARY KEY(Id));
+
+       CREATE table IF NOT EXISTS posts(
+       Id INT(11) NOT NULL,
+       CreationDate DATETIME NOT NULL,
+       Body LONGTEXT,
+       OwnerUserId INT(11) NOT NULL,
+       LastActivityDate DATETIME NOT NULL,
+       PRIMARY KEY(Id),
+       FOREIGN KEY(OwnerUserId) REFERENCES userInfo(Id)
+       );
+
+       CREATE table IF NOT EXISTS postHistory(
+       Id INT(11) NOT NULL,
+       PostHistoryTypeId INT(11) NOT NULL,
+       PostId INT(11) NOT NULL,
+       CreationDate DATETIME NOT NULL,
+       UserInfoId INT(11) NOT NULL,
+       Text LONGTEXT,
+       Comment LONGTEXT,
+       PRIMARY KEY(Id),
+       FOREIGN KEY(PostId) REFERENCES posts(Id),
+       FOREIGN KEY(UserInfoId) REFERENCES userInfo(Id)
+       );
+
+       CREATE table IF NOT EXISTS postLinks(
+       Id INT(11) NOT NULL,
+       CreationDate DATETIME NOT NULL,
+       PostId INT(11) NOT NULL,
+       RelatedPostId INT(11) NOT NULL,
+       LinkTypeId INT(11) NOT NULL,
+       PRIMARY KEY(Id),
+       FOREIGN KEY(PostId) REFERENCES posts(Id),
+       FOREIGN KEY(RelatedPostId) REFERENCES posts(Id)
+       );
+
+       CREATE table IF NOT EXISTS badges(
+       Id INT(11) NOT NULL,
+       UserInfoId INT(11) NOT NULL,
+       Name VARCHAR(255) NOT NULL,
+       DATE DATETIME NOT NULL,
+       PRIMARY KEY(Id),
+       FOREIGN KEY(UserInfoId) REFERENCES userInfo(Id)
+       );
+
+      CREATE table IF NOT EXISTS comments(
+       Id INT(11) NOT NULL,
+       PostId INT(11) NOT NULL,
+       Score INT(11) NOT NULL,
+       CreationDate DATETIME NOT NULL,
+       UserInfoId INT(11) NOT NULL,
+       PRIMARY KEY(Id),
+       FOREIGN KEY(PostId) REFERENCES posts(Id),
+       FOREIGN KEY(UserInfoId) REFERENCES userInfo(Id)
+       );
+
+       CREATE table IF NOT EXISTS votes(
+       Id INT(11) NOT NULL,
+       PostId INT(11) NOT NULL,
+       VoteTypeId INT(11) NOT NULL,
+       CreationDate DATE NOT NULL,
+       PRIMARY KEY(Id),
+       FOREIGN KEY(PostId) REFERENCES posts(Id)
+       );
+
+       CREATE table IF NOT EXISTS favoriteVotes(
+       Id INT(11) NOT NULL,
+       UserInfoId INT(11) NOT NULL,
+       PRIMARY KEY(Id),
+       FOREIGN KEY (Id) REFERENCES votes(Id),
+       FOREIGN KEY (UserInfoId) REFERENCES userInfo(Id)
+       );
+
+       CREATE table IF NOT EXISTS bountyVotes(
+       Id INT(11) NOT NULL,
+       BountyAmount INT(11) NOT NULL,
+       PRIMARY KEY(Id),
+       FOREIGN KEY (Id) REFERENCES votes(Id)
+       );
+
+
+       CREATE table IF NOT EXISTS wikiPost(
+       WikiPostId INT(11) NOT NULL,
+       ExcerptPostId INT(11),
+       PRIMARY KEY(WikiPostId),
+       FOREIGN KEY(WikiPostId) REFERENCES posts(Id),
+       FOREIGN KEY(ExcerptPostId) REFERENCES posts(Id)
+       );
+
+       CREATE table IF NOT EXISTS tags(
+      Id INT(11) NOT NULL,
+       TagName VARCHAR(255) NOT NULL,
+       WikiPostId INT(11),
+       PRIMARY KEY(Id),
+       UNIQUE(TagName),
+       FOREIGN KEY(WikiPostId) REFERENCES wikiPost(WikiPostId)
+       );
+
+       CREATE table IF NOT EXISTS questionPosts(
+       Id INT(11) NOT NULL,
+       PostId INT(11) NOT NULL,
+       ViewCount INT(11) NOT NULL,
+       Title VARCHAR(255) NOT NULL,
+       PRIMARY KEY(Id),
+       FOREIGN KEY(PostId) REFERENCES posts(Id)
+       );
+
+       CREATE table IF NOT EXISTS answerPosts(
+       Id INT(11) NOT NULL,
+       PostId INT(11) NOT NULL,
+       Accepted INT(11) NOT NULL,
+       ParentId INT(11) NOT NULL,
+       PRIMARY KEY(Id),
+       FOREIGN KEY(ParentId) REFERENCES questionPosts(Id),
+       FOREIGN KEY(PostId) REFERENCES posts(Id)
+       );
+
+       CREATE table IF NOT EXISTS questionTags(
+       QuestionId INT(11) NOT NULL,
+       TagName VARCHAR(255) NOT NULL,
+       PRIMARY KEY(QuestionId,TagName)
+       );
+
+       CREATE table IF NOT EXISTS acceptedAnswer(
+       QuestionId INT(11) NOT NULL,
+       AnswerId INT(11),
+       PRIMARY KEY(QuestionId),
+       FOREIGN KEY(QuestionId) REFERENCES questionPosts(Id),
+       FOREIGN KEY(AnswerId) REFERENCES answerPosts(Id)
+       );
+
+       ALTER table questionTags
+       ADD FOREIGN KEY(QuestionId) REFERENCES questionPosts(Id);
+
+       ALTER table questionTags
+       ADD FOREIGN KEY(TagName) REFERENCES tags(TagName);
+
+       '''
+
+    curs.execute(sql)
+
+
+def requirement4(host, user, password):
+
+    # userInfo csv data file
+    f = open('userInfo.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    #익명의 사용자가 post를 작성한 경우도 있으므로 foreign key constraint에 어긋나지 않기 위해 userId=0인 경우는 남겨둔다.
+    # next(rdr, None)
+    userInfoData = []
+    for line in rdr:
+        if ((line[3]) == ''):
+            line[3] = None
+        if ((line[6]) == ''):
+            line[6] = None
+        if ((line[7]) == ''):
+            line[7] = None
+        if ((line[8]) == ''):
+            line[8] = None
+        userInfoData.append(tuple(line))
+    userInfoData = tuple(userInfoData)
+
+    # post data file
+    f = open('posts.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    postsData = []
+    for line in rdr:
+        if ((line[2]) == ''):
+            line[2] = None
+        postsData.append(tuple(line))
+    postsData = tuple(postsData)
+
+    # postHistory data file
+    f = open('postHistory.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    postHistoryData = []
+    for line in rdr:
+        if ((line[5]) == ''):
+            line[5] = None
+        if ((line[6]) == ''):
+            line[6] = None
+        postHistoryData.append(tuple(line))
+    postHistoryData = tuple(postHistoryData)
+
+    # postLinks data file
+    f = open('postLinks.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    postLinksData = []
+    for line in rdr:
+        postLinksData.append(tuple(line))
+    postLinksData = tuple(postLinksData)
+
+    # badges data file
+    f = open('badges.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    badgesData = []
+    for line in rdr:
+        badgesData.append(tuple(line))
+    badgesData = tuple(badgesData)
+
+    # comments data file
+    f = open('comments.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    commentsData = []
+    for line in rdr:
+        commentsData.append(tuple(line))
+    commentsData = tuple(commentsData)
+
+    # votes data file
+    f = open('votes.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    votesData = []
+    for line in rdr:
+        line=[line[0],line[1],line[2],line[3]]
+        votesData.append(tuple(line))
+    votesData = tuple(votesData)
+
+    # favoritevotes data file
+    f = open('votes.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    favoriteVotesData = []
+    for line in rdr:
+        if(line[2]!='5'):
+            continue
+        #스키마에서 favoritevotes의 userinfoId를 NOT NULL로 설정했으므로 만약 빈칸이 들어온다면 이를 익명으로 간주, 0으로 대체(물론 데이터에는 0또는 null이 없었다.)
+        if ((line[4]) == ''):
+            line[4] = 0
+        line = [line[0], line[4]]
+        favoriteVotesData.append(tuple(line))
+    favoriteVotesData = tuple(favoriteVotesData)
+
+    # bountyVotes data file
+    f = open('votes.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    bountyVotesData = []
+    for line in rdr:
+        #포상금과 관련된 vote type이 아닌 경우 고려x
+        if(line[2]!='8' and line[2]!='9'):
+            continue
+        #포상금을 걸었는데, 포상금액수가 빈칸이면 0원으로 고려
+        if ((line[5]) == ''):
+            line[5] = 0
+        line = [line[0], line[5]]
+        bountyVotesData.append(tuple(line))
+    bountyVotesData = tuple(bountyVotesData)
+
+    # wikiPost data file
+    f = open('tags.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    wikiPostData = []
+    for line in rdr:
+        if ((line[3]) == ''):
+            continue
+        if ((line[2]) == ''):
+            line[2] = None
+        line = [line[3], line[2]]
+        wikiPostData.append(tuple(line))
+    wikiPostsData = tuple(wikiPostData)
+
+    # tags data file
+    f = open('tags.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    tagsData = []
+    for line in rdr:
+        if ((line[3]) == ''):
+            line[3] = None
+        line = [line[0], line[1], line[3]]
+        tagsData.append(tuple(line))
+    tagsData = tuple(tagsData)
+
+    # questionPosts data file
+    f = open('questionPosts.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    questionPostsData = []
+    for line in rdr:
+        line=[line[0], line[1], line[3], line[4]]
+        questionPostsData.append(tuple(line))
+    questionPostsData = tuple(questionPostsData)
+
+    # answerPosts data file
+    f = open('answerPosts.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    # next(rdr, None)
+    answerPostsData = []
+    for line in rdr:
+        line=[line[0], line[1], line[2], line[3]]
+        answerPostsData.append(tuple(line))
+    answerPostsData = tuple(answerPostsData)
+
+    #questionTags datafile
+    f=open('questionPosts.csv','r', encoding='utf-8', errors='replace')
+    rdr=csv.reader(f)
+    next(rdr, None)
+    questionTagsData=[]
+    tagName = ''
+    for line in rdr:
+        #question에 해당하는 tag가 없는 경우 넘어간다.(tag는 null이 가능하다고 가정)
+        if ((line[5]) == ''):
+            continue
+        for c in line[5]:
+            if(c=='<'):
+                continue
+            if (c == '>'):
+                qId_tagName = (line[0], tagName)
+                questionTagsData.append(qId_tagName)
+                tagName = ''
+                continue
+            tagName=tagName+c
+
+    # acceptedAnswer data file
+    f = open('questionPosts.csv', 'r', encoding='utf-8', errors='replace')
+    rdr = csv.reader(f)
+    next(rdr, None)
+    acceptedAnswerData = []
+    for line in rdr:
+        if ((line[2]) == ''):
+            line[2] = 0
+        line = [line[0], line[2]]
+        acceptedAnswerData.append(tuple(line))
+    acceptedAnswerData = tuple(acceptedAnswerData)
+
+
+    conn = pymysql.connect(host=host, user=user, password=password, db='db2017_5', charset='utf8')
+    curs = conn.cursor()
+
+    sql='''insert ignore into userInfo
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);'''
+    curs.executemany(sql, userInfoData)
+    conn.commit()
+
+    sql='''insert ignore into posts VALUES(%s,%s,%s,%s,%s); '''
+    curs.executemany(sql, postsData)
+    conn.commit()
+
+    sql='''insert ignore into postHistory VALUES(%s,%s,%s,%s,%s,%s,%s); '''
+    curs.executemany(sql, postHistoryData)
+    conn.commit()
+
+    sql='''insert ignore into postLinks VALUES(%s,%s,%s,%s,%s);'''
+    curs.executemany(sql, postLinksData)
+    conn.commit()
+
+    sql='''insert ignore into badges VALUES(%s,%s,%s,%s); '''
+    curs.executemany(sql, badgesData)
+    conn.commit()
+
+    sql='''insert ignore into comments VALUES(%s,%s,%s,%s,%s); '''
+    curs.executemany(sql, commentsData)
+    conn.commit()
+
+    sql='''insert ignore into votes VALUES(%s,%s,%s,%s); '''
+    curs.executemany(sql, votesData)
+    conn.commit()
+
+    sql='''insert ignore into favoriteVotes VALUES(%s,%s) '''
+    curs.executemany(sql, favoriteVotesData)
+    conn.commit()
+
+    sql='''insert ignore into bountyVotes VALUES(%s,%s); '''
+    curs.executemany(sql, bountyVotesData)
+    conn.commit()
+
+    sql='''insert ignore into wikiPost VALUES(%s,%s); '''
+    curs.executemany(sql, wikiPostData)
+    conn.commit()
+
+    sql='''insert ignore into tags VALUES(%s,%s,%s); '''
+    curs.executemany(sql, tagsData)
+    conn.commit()
+
+    sql='''insert ignore into questionPosts VALUES(%s,%s,%s,%s); '''
+    curs.executemany(sql, questionPostsData)
+    conn.commit()
+
+    sql='''insert ignore into answerPosts VALUES(%s,%s,%s,%s); '''
+    curs.executemany(sql, answerPostsData)
+    conn.commit()
+
+    sql='''insert ignore into questionTags VALUES(%s,%s); '''
+    curs.executemany(sql, questionTagsData)
+    conn.commit()
+
+    sql='''insert ignore into acceptedAnswer VALUES(%s,%s); '''
+    curs.executemany(sql, acceptedAnswerData)
+    conn.commit()
+    conn.close()
+
+def requirement6(host='localhost', user='root', password='0000'):
+    conn = pymysql.connect(host=host, user=user, password=password, db='db2017_5', charset='utf8')
+    try:
+        with conn.cursor() as cursor:
+            sql = '''
+                SELECT  	U.* , S.sigma
+                FROM 	userinfo AS U, (SELECT SS.Id, MAX(SS.sigma) as sigma, SS.age_range
+                                                FROM (SELECT U2.Id, IF(FLOOR(U2.Age/10)<5, FLOOR(U2.Age/10), 5)*10 AS age_range, SUM(Q.ViewCount) AS sigma
+                                                        FROM questionPosts AS Q, posts AS P, userInfo AS U2
+                                                        WHERE	(P.OwnerUserId = U2.Id)
+                                                                AND
+                                                                (P.Id = Q.PostId)
+                                                                AND
+                                                                (U2.Age IS NOT NULL)
+                                                        GROUP BY U2.Id
+                                                        ORDER BY sigma DESC) AS SS
+                                                WHERE (age_range >=10)
+                                                GROUP BY age_range) AS S
+
+                WHERE	(U.Id = S.Id)
+                ORDER BY U.Reputation DESC
+
+                '''
+                # SS table을 만듭니다. SS 테이블에는 사용자의 아이디와 사용자의 연령대, 사용자가 쓴 질문 게시물의 조회수 총합이 포함됩니다.
+                # 이 때 연령대는 사용자의 나이를 10으로 나눈 몫으로 구하며, 50대 이상의 사용자를 전부 50대로 표시하기 위해 IF문을 사용하여 몫이 6보다 큰 경우는 5로 표시하도록 합니다.
+                # userInfo와 posts의 사용자 ID를 연결하고, posts와 questionPosts의 PostId를 연결하여 사용자 데이터와 사용자가 쓴 질문 데이터를 JOIN시킵니다.
+                # 이 때 사용자가 나이를 적지 않은 경우는 제외하였습니다. 이 때 Age 값이 NULL인 가상의 사용자 역시 제외됩니다.
+                # sigma 순으로 정렬한 것은 이후 S table에서 GROUP BY를 수행할 때 가장 sigma가 높은 사용자가 맨 앞에 나타나도록 하기 위해서입니다.
+                # 이후 S table을 만듭니다. S 테이블에는 사용자의 아이디와 사용자가 쓴 질문 게시물의 조회수 총합, 사용자의 연령대가 포합됩니다.
+                # SS 테이블 중에서 연령대별로 가장 조회수가 높은 사용자를 나타내게 됩니다.
+                # 이후 userInfo ID 중 S table에서 가장 조회수가 높은 사용자들을 매칭시키고 그들의 사용자 정보와 조회수 총합 값을 출력합니다.
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for row in result:
+                print(row)
+    finally:
+        conn.close()
+
+def requirement7(host='localhost', user='root', password='0000'):
+    conn = pymysql.connect(host=host, user=user, password=password, db='db2017_5', charset='utf8')
+    try:
+        with conn.cursor() as cursor:
+            sql = '''
+                SELECT COUNT(CASE WHEN LEFT(CreationDate,4)=2010 THEN 1 END) AS 'Year2010', COUNT(CASE WHEN LEFT(CreationDate,4)=2011 THEN 1 END) AS 'Year2011', COUNT(CASE WHEN LEFT(CreationDate,4)=2012 THEN 1 END) AS 'Year2012', COUNT(CASE WHEN LEFT(CreationDate,4)=2013 THEN 1 END) AS 'Year2013', COUNT(CASE WHEN LEFT(CreationDate,4)=2014 THEN 1 END) AS 'Year2014'
+                 FROM userInfo
+
+                '''
+                # userInfo에서 Year2010, Year2011, Year2012, Year2013, Year2014의 다섯 개의 컬럼을 출력합니다.
+                # 각 컬럼에서는 userInfo의 CreationDate 값을 처음 네 자를 확인하여 해당 날짜가 각각 2010, 2011, 2012, 2013, 2014인 CASE를 확인합니다.
+                # 이는 사용자가 계정을 만든 Datetime의 연도 값을 도출합니다. 해당 값이 2010이라면 Year2010 컬럼의 CASE에 포함되여 Year2010의 COUNT 대상이 됩니다.
+                # 다음과 같이 5번의 COUNT를 실시하여 Year2010, Year2011, Year2012, Year2013, Year2014에서 각 연도별로 계정을 만든 사용자의 수를 확인할 수 있습니다.
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for row in result:
+                print(row)
+    finally:
+        conn.close()
+
+
+def requirement8(host='localhost', user='root', password='0000'):
+    conn = pymysql.connect(host=host, user=user, password=password, db='db2017_5', charset='utf8')
+    try:
+        with conn.cursor() as cursor:
+            sql = '''
+                SELECT PostId,COUNT(CASE WHEN VoteTypeId=2 THEN 1 END) AS likes,COUNT(CASE WHEN VoteTypeId=3 THEN 1 END) AS dislikes,COUNT(CASE WHEN VoteTypeId=2 THEN 1 END) - COUNT(CASE WHEN VoteTypeId=3 THEN 1 END) AS points
+                FROM votes
+                WHERE
+                       PostId IN(SELECT PostId
+                            FROM votes
+                            WHERE VoteTypeId=2)
+                      AND
+                      PostId IN(SELECT PostId
+                                FROM comments
+                                GROUP BY PostId
+                                HAVING count(*)>=10)
+                GROUP BY PostId
+                ORDER BY points DESC
+                '''
+                # votes의 튜플들 중 VoteTypeId=2(좋아요)가 하나라도 있고, comment의 튜플 수가 10개 이상인 PostId의 튜플들만을 기준으로 값을 도출합니다.
+                # 이후 PostId를 기준으로 GROUP BY 하여 VoteTypeId=2(좋아요)인 튜플의 수, VoteTypeId=3(싫어요)인 튜플의 수를 CASE WHEN 문으로 파악합니다.
+                # 이를 각각 likes, dislikes로 나타내며, 두 값을 뺀 값을 points로 나타냅니다.
+                # 이후 이렇게 도출한 table을 points DESC로 ORDER BY 하여 point의 내림차순으로 정렬합니다.
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for row in result:
+                print(row)
+    finally:
+        conn.close()
+
+
+def requirement9(host='localhost', user='root', password='0000'):
+    conn = pymysql.connect(host=host, user=user, password=password, db='db2017_5', charset='utf8')
+    try:
+        with conn.cursor() as cursor:
+            sql = '''
+                SELECT E.Id, S.badgecounts, (E.num_of_posts/E.num_of_years) as avgpost_per_year
+                FROM(SELECT U.Id, COUNT(*) as num_of_posts, COUNT(DISTINCT LEFT(P.CreationDate, 4)) as num_of_years
+                        FROM userInfo as U, posts as P
+                        WHERE (U.Id= P.OwnerUserId)
+                                AND
+                                (U.Id <> 0)
+                                AND
+                                (P.Id <> 0)
+                        GROUP BY U.Id
+                        ORDER BY U.Id) AS E,
+                        (SELECT DISTINCT UserInfoId, COUNT(*) AS badgecounts
+                        FROM badges
+                        GROUP BY UserInfoId
+                        HAVING COUNT(*)>= 50) AS S
+                WHERE E.Id=S.UserInfoId
+                ORDER BY S.badgecounts DESC
+                '''
+                # badgecounts, avgpost_per_year(각각 뱃지의 갯수, 연간 평균 게시물 수입니다)를 파악하기 위해 E,S라는 새로운 table을 만듭니다.
+                # E에서는 사용자가 쓴 게시물들을 U.Id= P.OwnerUserId로 JOIN 시킵니다. 또 가상의 사용자와 가상의 게시물 정보를 제외시킵니다.
+                # 이 E 테이블에서 사용자의 ID를 기준으로 게시물의 수(튜플의 수로 나타납니다)를 COUNT하여 num_of_posts로, COUNT(DISTINCT LEFT(P.CreationDate, 4))로
+                # posts의 생성 연도를 DISTINCT하게 COUNT하여 사용자가 게시물을 작성한 연도의 수를 num_of_years로 저장합니다.
+                # 또한 badges에서 사용자 ID 별로 튜플의 수를 세고, COUNT 수가 50개 이상인 UserInfoId만을 추려 뱃지 수가 50개 이상인 사용자와 뱃지 수(badgecounts)의 테이블을 생성합니다.
+                # 이러한 두 테이블 E, S에서 Id와 UserInfoId를 매칭시키고, Id, badgecounts, avgpost_per_year(게시물의 수/게시물을 쓴 연도의 수)를 도출한 후
+                # badgecounts의 내림차순으로 정렬합니다.
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for row in result:
+                print(row)
+    finally:
+        conn.close()
+
+
+def requirement10(host='localhost', user='root', password='0000'):
+    conn = pymysql.connect(host=host, user=user, password=password, db='db2017_5', charset='utf8')
+    try:
+        with conn.cursor() as cursor:
+            sql = '''
+                SELECT COUNT(DISTINCT SCROOGE.Id) SCROOGECount, AVG(SCROOGE.Reputation) AS SCROOGEReputation, COUNT(DISTINCT NOTSCROOGE.Id) AS NotSCROOGECount,AVG(NOTSCROOGE.Reputation) AS NotSCROOGEReputation
+                FROM (SELECT DISTINCT u.Id as Id, AVG(BountyAmount) as S, Reputation
+                       FROM votes as v, posts as p, userinfo as u, bountyvotes as b
+                       WHERE v.PostId = p.Id AND p.OwnerUserId = u.Id AND v.Id = b.Id AND u.Id <>0
+                       GROUP BY u.Id
+                       HAVING AVG(BountyAmount) =0) AS SCROOGE,
+                       (SELECT u.Id as Id, AVG(BountyAmount) as N, Reputation, p.Id as PostId
+                       FROM votes as v, posts as p, userinfo as u, bountyvotes as b
+                       WHERE v.PostId = p.Id AND p.OwnerUserId = u.Id AND v.Id = b.Id AND u.Id <>0
+                       GROUP BY u.Id
+                       HAVING AVG(BountyAmount) >0 ) AS NOTSCROOGE
+                '''
+                #포상금 vote (vote type 9)을 올린 사람들 중에, 내 건 votes들의 BountyAmount가 모두 0인 사람들에 주목하였다.
+                #이들은 포상금을 하나도 걸지 않은 구두쇠들이다. 우리는 이들의 Reputation이 대체적으로 낮을 것이라 생각하여 이들의 Reputation을 다른 사람들과 비교하기로 하였다.
+                #이들을 찾기 위하여 우선 votes와 posts, userinfo, bountyvotes table을 join하였다. 여기서 익명의 사용자는 제외하였다.
+                #join 후에 bountyAmount들의 평균이 0인 사람들을 모두 뽑아 SCROOGE라고 명명하였으며, SCROOGE가 아닌 사람들(한 번이라도 양수인 BountyAmount를 건 적이 있는 사람들)
+                #을 NOTSCROOGE라 명명하였다. 최종적으로 우리는, SCROOGE인 사람들의 수를 COUNT 함수로 구하고 그들의 Reputation의 평균을 AVG 함수로 구하여 SELECT하였다..
+                #또한, NOTSCROOGE인 사람들의 수와 Reputation의 평균을 위와 같은 방법으로 구하였다. 이를 1행 4열의 table로 생성하였다.
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for row in result:
+                print(row)
+    finally:
+        conn.close()
+
+requirement2('localhost', 'root', '0000')
+requirement3('localhost', 'root', '0000')
+requirement4('localhost','root','0000')
+requirement6('localhost','root','0000')
+requirement7('localhost','root','0000')
+requirement8('localhost','root','0000')
+requirement9('localhost','root','0000')
+requirement10('localhost','root','0000')
