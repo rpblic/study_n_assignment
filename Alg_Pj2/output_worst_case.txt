@@ -1,0 +1,461 @@
+
+DynamicProgramming-----------------------------------------------------------------------------
+
+The array of profit is:
+[[   0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.
+     0.    0.]
+ [   0.   25.   25.   25.   25.   25.   25.   25.   25.   25.   25.   25.
+    25.   25.]
+ [   0.   25.   50.   50.   50.   50.   50.   50.   50.   50.   50.   50.
+    50.   50.]
+ [   0.   25.   50.   60.   60.   60.   60.   60.   60.   60.   60.   60.
+    60.   60.]
+ [   0.   25.   50.   60.   60.   75.   85.   85.   85.   85.   85.   85.
+    85.   85.]
+ [   0.   25.   50.   60.   60.   75.   85.   85.   85.   85.   85.   85.
+    85.  105.]]
+The array of knapsack is: [ 0.  0.  0.  0.  1.]
+######## The number of operation is: 70
+
+
+105.0,	[0.0, 0.0, 0.0, 0.0, 1.0]
+25,	1,	0.0
+25,	1,	0.0
+10,	1,	0.0
+25,	3,	0.0
+105,	13,	1.0
+
+BackTracking-----------------------------------------------------------------------------
+
+i		Total-Profit	Total-Weight	Array-of-knapsack		Max-Profit	Max-knapsack-array
+_____________________________________________________________________________________
+0		0		0		[ 0.  0.  0.  0.  0.]		0		[ 0.  0.  0.  0.  0.]
+	MaxProfit do not changed.
+	Promising(141.53846153846155 > 0): split two children nodes
+1		25		1		[ 1.  0.  0.  0.  0.]		0		[ 0.  0.  0.  0.  0.]
+	MaxProfit array changed: [ 1.  0.  0.  0.  0.]	max_profit: 25
+	Promising(141.53846153846155 > 25): split two children nodes
+2		50		2		[ 1.  1.  0.  0.  0.]		25		[ 1.  0.  0.  0.  0.]
+	MaxProfit array changed: [ 1.  1.  0.  0.  0.]	max_profit: 50
+	Promising(141.53846153846155 > 50): split two children nodes
+3		60		3		[ 1.  1.  1.  0.  0.]		50		[ 1.  1.  0.  0.  0.]
+	MaxProfit array changed: [ 1.  1.  1.  0.  0.]	max_profit: 60
+	Promising(141.53846153846155 > 60): split two children nodes
+4		85		6		[ 1.  1.  1.  1.  0.]		60		[ 1.  1.  1.  0.  0.]
+	MaxProfit array changed: [ 1.  1.  1.  1.  0.]	max_profit: 85
+	Promising(141.53846153846155 > 85): split two children nodes
+5		190		19		[ 1.  1.  1.  1.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		85		6		[ 1.  1.  1.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(85 <= 85): pass the children nodes
+4		60		3		[ 1.  1.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(140.76923076923077 > 85): split two children nodes
+5		165		16		[ 1.  1.  1.  0.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		60		3		[ 1.  1.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(60 <= 85): pass the children nodes
+3		50		2		[ 1.  1.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(139.6153846153846 > 85): split two children nodes
+4		75		5		[ 1.  1.  0.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(139.6153846153846 > 85): split two children nodes
+5		180		18		[ 1.  1.  0.  1.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		75		5		[ 1.  1.  0.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(75 <= 85): pass the children nodes
+4		50		2		[ 1.  1.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(138.84615384615384 > 85): split two children nodes
+5		155		15		[ 1.  1.  0.  0.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		50		2		[ 1.  1.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(50 <= 85): pass the children nodes
+2		25		1		[ 1.  0.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(124.61538461538461 > 85): split two children nodes
+3		35		2		[ 1.  0.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(124.61538461538461 > 85): split two children nodes
+4		60		5		[ 1.  0.  1.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(124.61538461538461 > 85): split two children nodes
+5		165		18		[ 1.  0.  1.  1.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		60		5		[ 1.  0.  1.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(60 <= 85): pass the children nodes
+4		35		2		[ 1.  0.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(123.84615384615384 > 85): split two children nodes
+5		140		15		[ 1.  0.  1.  0.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		35		2		[ 1.  0.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(35 <= 85): pass the children nodes
+3		25		1		[ 1.  0.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(122.6923076923077 > 85): split two children nodes
+4		50		4		[ 1.  0.  0.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(122.6923076923077 > 85): split two children nodes
+5		155		17		[ 1.  0.  0.  1.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		50		4		[ 1.  0.  0.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(50 <= 85): pass the children nodes
+4		25		1		[ 1.  0.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(121.92307692307692 > 85): split two children nodes
+5		130		14		[ 1.  0.  0.  0.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		25		1		[ 1.  0.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(25 <= 85): pass the children nodes
+1		0		0		[ 0.  0.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(124.61538461538461 > 85): split two children nodes
+2		25		1		[ 0.  1.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(124.61538461538461 > 85): split two children nodes
+3		35		2		[ 0.  1.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(124.61538461538461 > 85): split two children nodes
+4		60		5		[ 0.  1.  1.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(124.61538461538461 > 85): split two children nodes
+5		165		18		[ 0.  1.  1.  1.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		60		5		[ 0.  1.  1.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(60 <= 85): pass the children nodes
+4		35		2		[ 0.  1.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(123.84615384615384 > 85): split two children nodes
+5		140		15		[ 0.  1.  1.  0.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		35		2		[ 0.  1.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(35 <= 85): pass the children nodes
+3		25		1		[ 0.  1.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(122.6923076923077 > 85): split two children nodes
+4		50		4		[ 0.  1.  0.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(122.6923076923077 > 85): split two children nodes
+5		155		17		[ 0.  1.  0.  1.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		50		4		[ 0.  1.  0.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(50 <= 85): pass the children nodes
+4		25		1		[ 0.  1.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(121.92307692307692 > 85): split two children nodes
+5		130		14		[ 0.  1.  0.  0.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		25		1		[ 0.  1.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(25 <= 85): pass the children nodes
+2		0		0		[ 0.  0.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(107.6923076923077 > 85): split two children nodes
+3		10		1		[ 0.  0.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(107.6923076923077 > 85): split two children nodes
+4		35		4		[ 0.  0.  1.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(107.6923076923077 > 85): split two children nodes
+5		140		17		[ 0.  0.  1.  1.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		35		4		[ 0.  0.  1.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(35 <= 85): pass the children nodes
+4		10		1		[ 0.  0.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(106.92307692307692 > 85): split two children nodes
+5		115		14		[ 0.  0.  1.  0.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		10		1		[ 0.  0.  1.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(10 <= 85): pass the children nodes
+3		0		0		[ 0.  0.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(105.76923076923077 > 85): split two children nodes
+4		25		3		[ 0.  0.  0.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(105.76923076923077 > 85): split two children nodes
+5		130		16		[ 0.  0.  0.  1.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		25		3		[ 0.  0.  0.  1.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Not Promising(25 <= 85): pass the children nodes
+4		0		0		[ 0.  0.  0.  0.  0.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit do not changed.
+	Promising(105 > 85): split two children nodes
+5		105		13		[ 0.  0.  0.  0.  1.]		85		[ 1.  1.  1.  1.  0.]
+	MaxProfit array changed: [ 0.  0.  0.  0.  1.]	max_profit: 105
+	Not Promising(105 <= 105): pass the children nodes
+5		0		0		[ 0.  0.  0.  0.  0.]		105		[ 0.  0.  0.  0.  1.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+Result MaxProfit array: [ 0.  0.  0.  0.  1.],	max_profit: 105
+######## The number of operation is: 126
+
+
+105,	[0.0, 0.0, 0.0, 0.0, 1.0]
+25,	1,	0.0
+25,	1,	0.0
+10,	1,	0.0
+25,	3,	0.0
+105,	13,	1.0
+
+Branch-And-Bound-----------------------------------------------------------------------------
+
+Node inserted to PQ: [{'node': (0, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (0, 0), 'i': 0, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 141.53846153846155}
+(The remaining PQ is: [])
+	Compute left-side node: {'node': (1, 1), 'i': 1, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 141.53846153846155}
+		MaxProfit array changed: [ 1.  0.  0.  0.  0.]	max_profit: 25
+		Node inserted to PQ: [{'node': (1, 1), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}]
+	Compute right-side node: {'node': (1, 0), 'i': 1, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 124.61538461538461}
+		Node inserted to PQ: [{'node': (1, 1), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (1, 1), 'i': 1, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 141.53846153846155}
+(The remaining PQ is: [{'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (2, 1), 'i': 2, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50, 'Tweight': 2, 'bound': 141.53846153846155}
+		MaxProfit array changed: [ 1.  1.  0.  0.  0.]	max_profit: 50
+		Node inserted to PQ: [{'node': (2, 1), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (2, 0), 'i': 2, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 124.61538461538461}
+		Node inserted to PQ: [{'node': (2, 1), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (2, 1), 'i': 2, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50, 'Tweight': 2, 'bound': 141.53846153846155}
+(The remaining PQ is: [{'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 60, 'Tweight': 3, 'bound': 141.53846153846155}
+		MaxProfit array changed: [ 1.  1.  1.  0.  0.]	max_profit: 60
+		Node inserted to PQ: [{'node': (3, 1), 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 60}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (3, 0), 'i': 3, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50, 'Tweight': 2, 'bound': 139.6153846153846}
+		Node inserted to PQ: [{'node': (3, 1), 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 60}, {'node': (3, 0), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 60, 'Tweight': 3, 'bound': 141.53846153846155}
+(The remaining PQ is: [{'node': (3, 0), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 1.,  1.,  1.,  1.,  0.]), 'Tprofit': 85, 'Tweight': 6, 'bound': 141.53846153846155}
+		MaxProfit array changed: [ 1.  1.  1.  1.  0.]	max_profit: 85
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 1.,  1.,  1.,  1.,  0.]), 'Tprofit': 85}, {'node': (3, 0), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 60, 'Tweight': 3, 'bound': 140.76923076923077}
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 1.,  1.,  1.,  1.,  0.]), 'Tprofit': 85}, {'node': (4, 0), 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 60}, {'node': (3, 0), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 1.,  1.,  1.,  1.,  0.]), 'Tprofit': 85, 'Tweight': 6, 'bound': 141.53846153846155}
+(The remaining PQ is: [{'node': (4, 0), 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 60}, {'node': (3, 0), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 1.,  1.,  1.,  1.,  1.]), 'Tprofit': 190, 'Tweight': 19, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 1.,  1.,  1.,  1.,  0.]), 'Tprofit': 85, 'Tweight': 6, 'bound': 85}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 60, 'Tweight': 3, 'bound': 140.76923076923077}
+(The remaining PQ is: [{'node': (3, 0), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  1.]), 'Tprofit': 165, 'Tweight': 16, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 60, 'Tweight': 3, 'bound': 60}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (3, 0), 'i': 3, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50, 'Tweight': 2, 'bound': 139.6153846153846}
+(The remaining PQ is: [{'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 1.,  1.,  0.,  1.,  0.]), 'Tprofit': 75, 'Tweight': 5, 'bound': 139.6153846153846}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 1.,  1.,  0.,  1.,  0.]), 'Tprofit': 75}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50, 'Tweight': 2, 'bound': 138.84615384615384}
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 1.,  1.,  0.,  1.,  0.]), 'Tprofit': 75}, {'node': (4, 0), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 1.,  1.,  0.,  1.,  0.]), 'Tprofit': 75, 'Tweight': 5, 'bound': 139.6153846153846}
+(The remaining PQ is: [{'node': (4, 0), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 1.,  1.,  0.,  1.,  1.]), 'Tprofit': 180, 'Tweight': 18, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 1.,  1.,  0.,  1.,  0.]), 'Tprofit': 75, 'Tweight': 5, 'bound': 75}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50, 'Tweight': 2, 'bound': 138.84615384615384}
+(The remaining PQ is: [{'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  1.]), 'Tprofit': 155, 'Tweight': 15, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 50, 'Tweight': 2, 'bound': 50}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (2, 0), 'i': 2, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 124.61538461538461}
+(The remaining PQ is: [{'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 1.,  0.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 124.61538461538461}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (3, 1), 'knapsack_array': array([ 1.,  0.,  1.,  0.,  0.]), 'Tprofit': 35}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (3, 0), 'i': 3, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 122.6923076923077}
+		Node inserted to PQ: [{'node': (3, 1), 'knapsack_array': array([ 1.,  0.,  1.,  0.,  0.]), 'Tprofit': 35}, {'node': (3, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 1.,  0.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 124.61538461538461}
+(The remaining PQ is: [{'node': (3, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 1.,  0.,  1.,  1.,  0.]), 'Tprofit': 60, 'Tweight': 5, 'bound': 124.61538461538461}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 1.,  0.,  1.,  1.,  0.]), 'Tprofit': 60}, {'node': (3, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  0.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 123.84615384615384}
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 1.,  0.,  1.,  1.,  0.]), 'Tprofit': 60}, {'node': (4, 0), 'knapsack_array': array([ 1.,  0.,  1.,  0.,  0.]), 'Tprofit': 35}, {'node': (3, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 1.,  0.,  1.,  1.,  0.]), 'Tprofit': 60, 'Tweight': 5, 'bound': 124.61538461538461}
+(The remaining PQ is: [{'node': (4, 0), 'knapsack_array': array([ 1.,  0.,  1.,  0.,  0.]), 'Tprofit': 35}, {'node': (3, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 1.,  0.,  1.,  1.,  1.]), 'Tprofit': 165, 'Tweight': 18, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 1.,  0.,  1.,  1.,  0.]), 'Tprofit': 60, 'Tweight': 5, 'bound': 60}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  0.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 123.84615384615384}
+(The remaining PQ is: [{'node': (3, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 1.,  0.,  1.,  0.,  1.]), 'Tprofit': 140, 'Tweight': 15, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 1.,  0.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 35}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (3, 0), 'i': 3, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 122.6923076923077}
+(The remaining PQ is: [{'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 1.,  0.,  0.,  1.,  0.]), 'Tprofit': 50, 'Tweight': 4, 'bound': 122.6923076923077}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 1.,  0.,  0.,  1.,  0.]), 'Tprofit': 50}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 121.92307692307692}
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 1.,  0.,  0.,  1.,  0.]), 'Tprofit': 50}, {'node': (4, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 1.,  0.,  0.,  1.,  0.]), 'Tprofit': 50, 'Tweight': 4, 'bound': 122.6923076923077}
+(The remaining PQ is: [{'node': (4, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 1.,  0.,  0.,  1.,  1.]), 'Tprofit': 155, 'Tweight': 17, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 1.,  0.,  0.,  1.,  0.]), 'Tprofit': 50, 'Tweight': 4, 'bound': 50}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 121.92307692307692}
+(The remaining PQ is: [{'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  1.]), 'Tprofit': 130, 'Tweight': 14, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 25}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (1, 0), 'i': 1, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 124.61538461538461}
+(The remaining PQ is: [])
+	Compute left-side node: {'node': (2, 1), 'i': 2, 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 124.61538461538461}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (2, 1), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}]
+	Compute right-side node: {'node': (2, 0), 'i': 2, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 107.6923076923077}
+		Node inserted to PQ: [{'node': (2, 1), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (2, 1), 'i': 2, 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 124.61538461538461}
+(The remaining PQ is: [{'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 0.,  1.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 124.61538461538461}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (3, 1), 'knapsack_array': array([ 0.,  1.,  1.,  0.,  0.]), 'Tprofit': 35}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (3, 0), 'i': 3, 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 122.6923076923077}
+		Node inserted to PQ: [{'node': (3, 1), 'knapsack_array': array([ 0.,  1.,  1.,  0.,  0.]), 'Tprofit': 35}, {'node': (3, 0), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 0.,  1.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 124.61538461538461}
+(The remaining PQ is: [{'node': (3, 0), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 0.,  1.,  1.,  1.,  0.]), 'Tprofit': 60, 'Tweight': 5, 'bound': 124.61538461538461}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 0.,  1.,  1.,  1.,  0.]), 'Tprofit': 60}, {'node': (3, 0), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 0.,  1.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 123.84615384615384}
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 0.,  1.,  1.,  1.,  0.]), 'Tprofit': 60}, {'node': (4, 0), 'knapsack_array': array([ 0.,  1.,  1.,  0.,  0.]), 'Tprofit': 35}, {'node': (3, 0), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 0.,  1.,  1.,  1.,  0.]), 'Tprofit': 60, 'Tweight': 5, 'bound': 124.61538461538461}
+(The remaining PQ is: [{'node': (4, 0), 'knapsack_array': array([ 0.,  1.,  1.,  0.,  0.]), 'Tprofit': 35}, {'node': (3, 0), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 0.,  1.,  1.,  1.,  1.]), 'Tprofit': 165, 'Tweight': 18, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 0.,  1.,  1.,  1.,  0.]), 'Tprofit': 60, 'Tweight': 5, 'bound': 60}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 0.,  1.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 123.84615384615384}
+(The remaining PQ is: [{'node': (3, 0), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 0.,  1.,  1.,  0.,  1.]), 'Tprofit': 140, 'Tweight': 15, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 0.,  1.,  1.,  0.,  0.]), 'Tprofit': 35, 'Tweight': 2, 'bound': 35}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (3, 0), 'i': 3, 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 122.6923076923077}
+(The remaining PQ is: [{'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 0.,  1.,  0.,  1.,  0.]), 'Tprofit': 50, 'Tweight': 4, 'bound': 122.6923076923077}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 0.,  1.,  0.,  1.,  0.]), 'Tprofit': 50}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 121.92307692307692}
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 0.,  1.,  0.,  1.,  0.]), 'Tprofit': 50}, {'node': (4, 0), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 0.,  1.,  0.,  1.,  0.]), 'Tprofit': 50, 'Tweight': 4, 'bound': 122.6923076923077}
+(The remaining PQ is: [{'node': (4, 0), 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25}, {'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 0.,  1.,  0.,  1.,  1.]), 'Tprofit': 155, 'Tweight': 17, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 0.,  1.,  0.,  1.,  0.]), 'Tprofit': 50, 'Tweight': 4, 'bound': 50}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 121.92307692307692}
+(The remaining PQ is: [{'node': (2, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 0.,  1.,  0.,  0.,  1.]), 'Tprofit': 130, 'Tweight': 14, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 0.,  1.,  0.,  0.,  0.]), 'Tprofit': 25, 'Tweight': 1, 'bound': 25}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (2, 0), 'i': 2, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 107.6923076923077}
+(The remaining PQ is: [])
+	Compute left-side node: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 0.,  0.,  1.,  0.,  0.]), 'Tprofit': 10, 'Tweight': 1, 'bound': 107.6923076923077}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (3, 1), 'knapsack_array': array([ 0.,  0.,  1.,  0.,  0.]), 'Tprofit': 10}]
+	Compute right-side node: {'node': (3, 0), 'i': 3, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 105.76923076923077}
+		Node inserted to PQ: [{'node': (3, 1), 'knapsack_array': array([ 0.,  0.,  1.,  0.,  0.]), 'Tprofit': 10}, {'node': (3, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 0.,  0.,  1.,  0.,  0.]), 'Tprofit': 10, 'Tweight': 1, 'bound': 107.6923076923077}
+(The remaining PQ is: [{'node': (3, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 0.,  0.,  1.,  1.,  0.]), 'Tprofit': 35, 'Tweight': 4, 'bound': 107.6923076923077}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 0.,  0.,  1.,  1.,  0.]), 'Tprofit': 35}, {'node': (3, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 0.,  0.,  1.,  0.,  0.]), 'Tprofit': 10, 'Tweight': 1, 'bound': 106.92307692307692}
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 0.,  0.,  1.,  1.,  0.]), 'Tprofit': 35}, {'node': (4, 0), 'knapsack_array': array([ 0.,  0.,  1.,  0.,  0.]), 'Tprofit': 10}, {'node': (3, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 0.,  0.,  1.,  1.,  0.]), 'Tprofit': 35, 'Tweight': 4, 'bound': 107.6923076923077}
+(The remaining PQ is: [{'node': (4, 0), 'knapsack_array': array([ 0.,  0.,  1.,  0.,  0.]), 'Tprofit': 10}, {'node': (3, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 0.,  0.,  1.,  1.,  1.]), 'Tprofit': 140, 'Tweight': 17, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 0.,  0.,  1.,  1.,  0.]), 'Tprofit': 35, 'Tweight': 4, 'bound': 35}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 0.,  0.,  1.,  0.,  0.]), 'Tprofit': 10, 'Tweight': 1, 'bound': 106.92307692307692}
+(The remaining PQ is: [{'node': (3, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 0.,  0.,  1.,  0.,  1.]), 'Tprofit': 115, 'Tweight': 14, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 0.,  0.,  1.,  0.,  0.]), 'Tprofit': 10, 'Tweight': 1, 'bound': 10}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (3, 0), 'i': 3, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 105.76923076923077}
+(The remaining PQ is: [])
+	Compute left-side node: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 0.,  0.,  0.,  1.,  0.]), 'Tprofit': 25, 'Tweight': 3, 'bound': 105.76923076923077}
+		MaxProfit do not changed.
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 0.,  0.,  0.,  1.,  0.]), 'Tprofit': 25}]
+	Compute right-side node: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 105}
+		Node inserted to PQ: [{'node': (4, 1), 'knapsack_array': array([ 0.,  0.,  0.,  1.,  0.]), 'Tprofit': 25}, {'node': (4, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 0.,  0.,  0.,  1.,  0.]), 'Tprofit': 25, 'Tweight': 3, 'bound': 105.76923076923077}
+(The remaining PQ is: [{'node': (4, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 0.,  0.,  0.,  1.,  1.]), 'Tprofit': 130, 'Tweight': 16, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 0.,  0.,  0.,  1.,  0.]), 'Tprofit': 25, 'Tweight': 3, 'bound': 25}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 105}
+(The remaining PQ is: [])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  1.]), 'Tprofit': 105, 'Tweight': 13, 'bound': 105}
+		MaxProfit array changed: [ 0.  0.  0.  0.  1.]	max_profit: 105
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 0}
+		Node not inserted to PQ: bound is too small.
+Result array: [ 0.  0.  0.  0.  1.]	Result max_profit: 105
+######## The number of operation is: 124
+
+
+105,	[0.0, 0.0, 0.0, 0.0, 1.0]
+25,	1,	0.0
+25,	1,	0.0
+10,	1,	0.0
+25,	3,	0.0
+105,	13,	1.0

@@ -1,0 +1,162 @@
+
+DynamicProgramming-----------------------------------------------------------------------------
+
+The array of profit is:
+[[   0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.
+     0.    0.]
+ [   0.    0.   30.   30.   30.   30.   30.   30.   30.   30.   30.   30.
+    30.   30.]
+ [   0.    0.   30.   30.   48.   48.   78.   78.   78.   78.   78.   78.
+    78.   78.]
+ [   0.    0.   30.   30.   48.   48.   78.   78.   90.   90.  108.  108.
+   138.  138.]
+ [   0.    0.   30.   30.   48.   48.   78.   78.   90.   90.  108.  118.
+   138.  138.]
+ [   0.    0.   30.   30.   48.   48.   78.   78.   90.   90.  108.  118.
+   138.  138.]]
+The array of knapsack is: [ 1.  1.  1.  0.  0.]
+######## The number of operation is: 70
+
+
+138.0,	[1.0, 1.0, 1.0, 0.0, 0.0]
+30,	2,	1.0
+48,	4,	1.0
+60,	6,	1.0
+40,	5,	0.0
+12,	3,	0.0
+
+BackTracking-----------------------------------------------------------------------------
+
+i		Total-Profit	Total-Weight	Array-of-knapsack		Max-Profit	Max-knapsack-array
+_____________________________________________________________________________________
+0		0		0		[ 0.  0.  0.  0.  0.]		0		[ 0.  0.  0.  0.  0.]
+	MaxProfit do not changed.
+	Promising(146.0 > 0): split two children nodes
+1		30		2		[ 1.  0.  0.  0.  0.]		0		[ 0.  0.  0.  0.  0.]
+	MaxProfit array changed: [ 1.  0.  0.  0.  0.]	max_profit: 30
+	Promising(146.0 > 30): split two children nodes
+2		78		6		[ 1.  1.  0.  0.  0.]		30		[ 1.  0.  0.  0.  0.]
+	MaxProfit array changed: [ 1.  1.  0.  0.  0.]	max_profit: 78
+	Promising(146.0 > 78): split two children nodes
+3		138		12		[ 1.  1.  1.  0.  0.]		78		[ 1.  1.  0.  0.  0.]
+	MaxProfit array changed: [ 1.  1.  1.  0.  0.]	max_profit: 138
+	Promising(146.0 > 138): split two children nodes
+4		178		17		[ 1.  1.  1.  1.  0.]		138		[ 1.  1.  1.  0.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+4		138		12		[ 1.  1.  1.  0.  0.]		138		[ 1.  1.  1.  0.  0.]
+	MaxProfit do not changed.
+	Promising(142.0 > 138): split two children nodes
+5		150		15		[ 1.  1.  1.  0.  1.]		138		[ 1.  1.  1.  0.  0.]
+	MaxProfit do not changed.
+	Not Promising(weight exceeded): pass the children nodes
+5		138		12		[ 1.  1.  1.  0.  0.]		138		[ 1.  1.  1.  0.  0.]
+	MaxProfit do not changed.
+	Not Promising(138 <= 138): pass the children nodes
+3		78		6		[ 1.  1.  0.  0.  0.]		138		[ 1.  1.  1.  0.  0.]
+	MaxProfit do not changed.
+	Not Promising(126.0 <= 138): pass the children nodes
+2		30		2		[ 1.  0.  0.  0.  0.]		138		[ 1.  1.  1.  0.  0.]
+	MaxProfit do not changed.
+	Not Promising(130.0 <= 138): pass the children nodes
+1		0		0		[ 0.  0.  0.  0.  0.]		138		[ 1.  1.  1.  0.  0.]
+	MaxProfit do not changed.
+	Not Promising(132.0 <= 138): pass the children nodes
+Result MaxProfit array: [ 1.  1.  1.  0.  0.],	max_profit: 138
+######## The number of operation is: 22
+
+
+138,	[1.0, 1.0, 1.0, 0.0, 0.0]
+30,	2,	1.0
+48,	4,	1.0
+60,	6,	1.0
+40,	5,	0.0
+12,	3,	0.0
+
+Branch-And-Bound-----------------------------------------------------------------------------
+
+Node inserted to PQ: [{'node': (0, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (0, 0), 'i': 0, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 146.0}
+(The remaining PQ is: [])
+	Compute left-side node: {'node': (1, 1), 'i': 1, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30, 'Tweight': 2, 'bound': 146.0}
+		MaxProfit array changed: [ 1.  0.  0.  0.  0.]	max_profit: 30
+		Node inserted to PQ: [{'node': (1, 1), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30}]
+	Compute right-side node: {'node': (1, 0), 'i': 1, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 132.0}
+		Node inserted to PQ: [{'node': (1, 1), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (1, 1), 'i': 1, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30, 'Tweight': 2, 'bound': 146.0}
+(The remaining PQ is: [{'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (2, 1), 'i': 2, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 78, 'Tweight': 6, 'bound': 146.0}
+		MaxProfit array changed: [ 1.  1.  0.  0.  0.]	max_profit: 78
+		Node inserted to PQ: [{'node': (2, 1), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 78}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (2, 0), 'i': 2, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30, 'Tweight': 2, 'bound': 130.0}
+		Node inserted to PQ: [{'node': (2, 1), 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 78}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (2, 1), 'i': 2, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 78, 'Tweight': 6, 'bound': 146.0}
+(The remaining PQ is: [{'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 138, 'Tweight': 12, 'bound': 146.0}
+		MaxProfit array changed: [ 1.  1.  1.  0.  0.]	max_profit: 138
+		Node inserted to PQ: [{'node': (3, 1), 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 138}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+	Compute right-side node: {'node': (3, 0), 'i': 3, 'knapsack_array': array([ 1.,  1.,  0.,  0.,  0.]), 'Tprofit': 78, 'Tweight': 6, 'bound': 126.0}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (3, 1), 'i': 3, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 138, 'Tweight': 12, 'bound': 146.0}
+(The remaining PQ is: [{'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (4, 1), 'i': 4, 'knapsack_array': array([ 1.,  1.,  1.,  1.,  0.]), 'Tprofit': 178, 'Tweight': 17, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 138, 'Tweight': 12, 'bound': 142.0}
+		Node inserted to PQ: [{'node': (4, 0), 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 138}, {'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}]
+Removed Node in PQ: {'node': (4, 0), 'i': 4, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 138, 'Tweight': 12, 'bound': 142.0}
+(The remaining PQ is: [{'node': (2, 0), 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30}, {'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Compute left-side node: {'node': (5, 1), 'i': 5, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  1.]), 'Tprofit': 150, 'Tweight': 15, 'bound': False}
+		MaxProfit do not changed.
+		Node not inserted to PQ: bound is too small.
+	Compute right-side node: {'node': (5, 0), 'i': 5, 'knapsack_array': array([ 1.,  1.,  1.,  0.,  0.]), 'Tprofit': 138, 'Tweight': 12, 'bound': 138}
+		Node not inserted to PQ: bound is too small.
+Removed Node in PQ: {'node': (2, 0), 'i': 2, 'knapsack_array': array([ 1.,  0.,  0.,  0.,  0.]), 'Tprofit': 30, 'Tweight': 2, 'bound': 130.0}
+(The remaining PQ is: [{'node': (1, 0), 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0}])
+	Do not compute the child Node: bound is too small.
+Removed Node in PQ: {'node': (1, 0), 'i': 1, 'knapsack_array': array([ 0.,  0.,  0.,  0.,  0.]), 'Tprofit': 0, 'Tweight': 0, 'bound': 132.0}
+(The remaining PQ is: [])
+	Do not compute the child Node: bound is too small.
+Result array: [ 1.  1.  1.  0.  0.]	Result max_profit: 138
+######## The number of operation is: 22
+
+
+138,	[1.0, 1.0, 1.0, 0.0, 0.0]
+30,	2,	1.0
+48,	4,	1.0
+60,	6,	1.0
+40,	5,	0.0
+12,	3,	0.0
+
+DynamicProgramming-----------------------------------------------------------------------------
+
+
+The hypothesis of"DP_K" algorithm is:
+	The Algorithm that I've run is: DP_K;	 the Number of objects is: 5, Maximum of weights of knapsack is: 13, Sum of profits of objects is: 190, and Sum of weights of object is: 20
+I've produced all sets of objects which has same Number of objects, same Sum of weights, same Sum of profits of objects, but has different distributions and with different pairs.
+And I build an algorithm for repeat 0/1 knapsack problem for every set of objects, and find out the average operation number and worst case operation number.
+The number of sets of objects is 2000000:
+	In here, the Average operation number is 70.000000, the Worst-Case operation number is 70 and one of the worst case profit & weight is ([55, 75, 45, 5, 10], [1, 5, 4, 3, 7]).
+
+
+BackTracking-----------------------------------------------------------------------------
+
+
+The hypothesis of"BT_K" algorithm is:
+	The Algorithm that I've run is: BT_K;	 the Number of objects is: 5, Maximum of weights of knapsack is: 13, Sum of profits of objects is: 190, and Sum of weights of object is: 20
+I've produced all sets of objects which has same Number of objects, same Sum of weights, same Sum of profits of objects, but has different distributions and with different pairs.
+And I build an algorithm for repeat 0/1 knapsack problem for every set of objects, and find out the average operation number and worst case operation number.
+The number of sets of objects is 2000000:
+	In here, the Average operation number is 24.734256, the Worst-Case operation number is 126 and one of the worst case profit & weight is ([25, 25, 10, 25, 105], [1, 2, 1, 3, 13]).
+
+
+Branch-And-Bound-----------------------------------------------------------------------------
+
+
+The hypothesis of"BB_K" algorithm is:
+	The Algorithm that I've run is: BB_K;	 the Number of objects is: 5, Maximum of weights of knapsack is: 13, Sum of profits of objects is: 190, and Sum of weights of object is: 20
+I've produced all sets of objects which has same Number of objects, same Sum of weights, same Sum of profits of objects, but has different distributions and with different pairs.
+And I build an algorithm for repeat 0/1 knapsack problem for every set of objects, and find out the average operation number and worst case operation number.
+The number of sets of objects is 2000000:
+	In here, the Average operation number is 24.267365, the Worst-Case operation number is 124 and one of the worst case profit & weight is ([25, 25, 10, 25, 105], [1, 2, 1, 3, 13]).
+

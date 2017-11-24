@@ -11,7 +11,8 @@ Then this file checks the argv of command and turn of the running of analysis fu
 Also you could turn off the overall comments to be shown(just write the results in output txt file.)
 by adding argv 'add_comment:0'.
 Or you could turn off writing the output file and just print it in command interpreter
-by adding argv 'write_txt:0'."""
+by adding argv 'write_txt:0'.
+"""
 
 # Module #######################################################################
 import os, sys, random
