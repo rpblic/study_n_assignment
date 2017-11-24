@@ -19,6 +19,7 @@ import os, sys, random
 import numpy as np
 import copy
 import queue
+import matplotlib.pyplot as plt
 os.chdir(os.getcwd())
 # I/O ##########################################################################
 def list_sort(profit_list, weight_list):
@@ -177,6 +178,7 @@ def DP_K(N, MAXWEIGHT, profit_list, weight_list, add_comment= True):
                 #                             totalprofit_array[i-1, k-weight_list[i-1]]+profit_list[i-1])
                 # But I programmed to make zero_one_array
                 # to find out whether I've included the object in a knapsack.
+                #
                 # Code below is how I've find out what object to choose.
     estimator= 0
     knapsack_array= np.zeros(N)
@@ -219,7 +221,6 @@ def Bd(i, Tprofit, Tweight, N, MAXWEIGHT, profit_list, weight_list):
         j += 1
     if j<=N:
         Ubound += (MAXWEIGHT - Lim_weight)*(profit_list[j-1]/weight_list[j-1])
-    # print(Ubound)
     return Ubound
 
 def Promising(i, Tprofit, Tweight, N, MAXWEIGHT, profit_list, weight_list):
@@ -239,11 +240,10 @@ def Promising(i, Tprofit, Tweight, N, MAXWEIGHT, profit_list, weight_list):
     global max_profit, operation_num
     operation_num += 1
     if Tweight>= MAXWEIGHT:
-        # print('Too much weight.')
         return False
     else:
         bound= Bd(i, Tprofit, Tweight, N, MAXWEIGHT, profit_list, weight_list)
-        return (Bd(i, Tprofit, Tweight, N, MAXWEIGHT, profit_list, weight_list)> max_profit)
+        return (bound> max_profit)
 
 def BT_K(N, MAXWEIGHT, profit_list, weight_list, add_comment= True):
     """
@@ -261,7 +261,7 @@ def BT_K(N, MAXWEIGHT, profit_list, weight_list, add_comment= True):
     """
     global max_profit, max_knapsack_array
     global comment, operation_num
-    # Initialize variable again
+    # Initialize variable again, and start with the base case
     max_profit= 0
     max_knapsack_array= np.zeros(N)
     comment= str()
@@ -493,22 +493,24 @@ def statistic_run(func, N, MAXWEIGHT, PROFIT_SUM, WEIGHT_SUM, possible_p_w= None
     global comment, operation_num
     comment= 0
     if not possible_p_w: possible_p_w= all_possible_objects(N, PROFIT_SUM, WEIGHT_SUM)
-    avg_op, max_op= 0, 0
+    op_list= []
+    max_op= 0
     for elmt_list in possible_p_w:
         operation_num= 0
         func(N, MAXWEIGHT, elmt_list[0], elmt_list[1], add_comment= False)
-        avg_op += operation_num
+        op_list.append(operation_num)
         if operation_num> max_op:
             max_op= operation_num
             max_op_list= elmt_list
-    avg_op= avg_op/len(possible_p_w)
+    avg_op= sum(op_list)/len(possible_p_w)
+    std_op= np.std(op_list)
     comment+= '\nThe hypothesis of"{}" algorithm is:\n'.format(func.__name__)
     comment+= '\tThe Algorithm that I\'ve run is: {};\t the Number of objects is: {}, Maximum of weights of knapsack is: {}, Sum of profits of objects is: {}, and Sum of weights of object is: {}\n'.format(func.__name__, N, MAXWEIGHT, PROFIT_SUM, WEIGHT_SUM)
     comment+= "I've produced all sets of objects which has same Number of objects, same Sum of weights, same Sum of profits of objects, but has different distributions and with different pairs.\n"
     comment+= 'And I build an algorithm for repeat 0/1 knapsack problem for every set of objects, and find out the average operation number and worst case operation number.\n'
     comment+= 'The number of sets of objects is {}:\n'.format(len(possible_p_w))
-    comment+= '\tIn here, the Average operation number is {:.6f}, the Worst-Case operation number is {} and one of the worst case profit & weight is {}.\n'.format(avg_op, max_op, max_op_list)
-    return (avg_op, max_op)
+    comment+= '\tIn here, the Average operation number is {:.6f}, the Standard Deviation of operation is {:.6f}, the Worst-Case operation number is {} and one of the worst case profit & weight is {}.\n'.format(avg_op, std_op, max_op, max_op_list)
+    return (avg_op, max_op, op_list)
 
 # Run file #####################################################################
 
@@ -532,13 +534,18 @@ def write_all(inputfile= 'input.txt', outputfile= 'output.txt',list_func= [DP_K,
                     comment=comment, max_profit= result_value, outputfile= outputfile)
     if analyze:
         possible_p_w= all_possible_objects(N, sum(profit_list), sum(weight_list))
-        for func in list_func:
-            statistic_run(func, N, MAXWEIGHT,sum(profit_list), sum(weight_list), possible_p_w)
+        plt.figure(figsize=(11,4))
+        for k, func in enumerate(list_func):
+            (avg_op, max_op, op_list)= statistic_run(func, N, MAXWEIGHT,sum(profit_list), sum(weight_list), possible_p_w)
             print(comment)
+            plt.subplot(1, len(list_func), k+1)
+            plt.hist(op_list, bins= 50)
+            plt.title(func.__name__)
             with open(outputfile, 'at') as f:
                 if comment:
                     comment= comment+ '\n'
                     f.write(comment)
+        plt.show()
     print('Algorithm ended; Check the result value, trace and analysis of algorithm in txt file.')
 
 # __main__ #####################################################################
